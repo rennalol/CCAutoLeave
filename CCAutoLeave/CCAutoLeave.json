@@ -1,0 +1,11 @@
+{
+  "Author": "Renna",
+  "Name": "CCAutoLeave",
+  "Punchline": "Auto leave Crystalline Conflict - /ccal.",
+  "Description": "Avoiding trigger finger early leave.",
+  "ApplicableVersion": "any",
+  "Tags": [
+    "pvp",
+    "plugin"
+  ]
+}

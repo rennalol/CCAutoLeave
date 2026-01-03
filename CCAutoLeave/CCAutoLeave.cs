@@ -1,47 +1,49 @@
-﻿using Dalamud.Game.Command;
+﻿﻿using System.Linq;
+using Dalamud.Game.Command;
 using Dalamud.IoC;
 using Dalamud.Plugin;
-using System.IO;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin.Services;
-using SamplePlugin.Windows;
+using Dalamud.Utility.Signatures;
+using CCAutoLeave.Windows;
+using CCAutoLeave.Hook;
+using System;
 
-namespace SamplePlugin;
+namespace CCAutoLeave;
 
 public sealed class Plugin : IDalamudPlugin
 {
+    public string Name => "CCAutoLeave";
+
     [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
-    [PluginService] internal static ITextureProvider TextureProvider { get; private set; } = null!;
     [PluginService] internal static ICommandManager CommandManager { get; private set; } = null!;
-    [PluginService] internal static IClientState ClientState { get; private set; } = null!;
-    [PluginService] internal static IPlayerState PlayerState { get; private set; } = null!;
-    [PluginService] internal static IDataManager DataManager { get; private set; } = null!;
     [PluginService] internal static IPluginLog Log { get; private set; } = null!;
+    [PluginService] internal static IGameInteropProvider InteropProvider { get; private set; } = null!;
+    [PluginService] internal static IChatGui Chat { get; private set; } = null!;
+    [PluginService] internal static IGameGui GameGui { get; private set; } = null!;
 
-    private const string CommandName = "/pmycommand";
+    internal CCMatchEndHook? CCMatchEndHook { get; init; }
 
+    private const string CommandName = "/ccal";
     public Configuration Configuration { get; init; }
-
-    public readonly WindowSystem WindowSystem = new("SamplePlugin");
+    public readonly WindowSystem WindowSystem = new();
     private ConfigWindow ConfigWindow { get; init; }
-    private MainWindow MainWindow { get; init; }
+
 
     public Plugin()
     {
         Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
 
-        // You might normally want to embed resources and load them from the manifest stream
-        var goatImagePath = Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "goat.png");
-
         ConfigWindow = new ConfigWindow(this);
-        MainWindow = new MainWindow(this, goatImagePath);
 
         WindowSystem.AddWindow(ConfigWindow);
-        WindowSystem.AddWindow(MainWindow);
 
-        CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
+        CommandManager.AddHandler(CommandName, new CommandInfo(HandleCommand)
         {
-            HelpMessage = "A useful message to display in /xlhelp"
+            HelpMessage = """
+            toggles CCAutoLeave plugin.
+            /ccal c|config - opens CCAutoLeave config.
+            """
         });
 
         // Tell the UI system that we want our windows to be drawn through the window system
@@ -54,10 +56,16 @@ public sealed class Plugin : IDalamudPlugin
         // Adds another button doing the same but for the main ui of the plugin
         PluginInterface.UiBuilder.OpenMainUi += ToggleMainUi;
 
-        // Add a simple message to the log with level set to information
-        // Use /xllog to open the log window in-game
-        // Example Output: 00:57:54.959 | INF | [SamplePlugin] ===A cool log message from Sample Plugin===
-        Log.Information($"===A cool log message from {PluginInterface.Manifest.Name}===");
+        try
+        {
+            CCMatchEndHook = new(this);
+        }
+        catch (SignatureException e)
+        {
+            Log.Error(e, $"failed to initialize CCMatchEndHook.");
+            Dispose();
+            throw;
+        }
     }
 
     public void Dispose()
@@ -66,21 +74,29 @@ public sealed class Plugin : IDalamudPlugin
         PluginInterface.UiBuilder.Draw -= WindowSystem.Draw;
         PluginInterface.UiBuilder.OpenConfigUi -= ToggleConfigUi;
         PluginInterface.UiBuilder.OpenMainUi -= ToggleMainUi;
-        
+
         WindowSystem.RemoveAllWindows();
 
         ConfigWindow.Dispose();
-        MainWindow.Dispose();
 
         CommandManager.RemoveHandler(CommandName);
+
+        CCMatchEndHook.Dispose();
     }
 
-    private void OnCommand(string command, string args)
+    private void HandleCommand(string command, string args)
     {
-        // In response to the slash command, toggle the display status of our main ui
-        MainWindow.Toggle();
+        if (new string[] { "c", "config" }.Contains(args, StringComparer.OrdinalIgnoreCase))
+        {
+            ConfigWindow.IsOpen = true;
+        }
+        else
+        {
+            Configuration.Enabled = !Configuration.Enabled;
+            Chat.Print($"CCAutoLeave is {(Configuration.Enabled ? "enabled" : "disabled")}.");
+        }
     }
-    
-    public void ToggleConfigUi() => ConfigWindow.Toggle();
-    public void ToggleMainUi() => MainWindow.Toggle();
+
+    public void ToggleConfigUi() => ConfigWindow.IsOpen = true;
+    public void ToggleMainUi() => ConfigWindow.IsOpen = true;
 }
