@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
-
+using System.Threading.Tasks;
 using Dalamud.Hooking;
 using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
@@ -38,12 +38,36 @@ internal class CCMatchEndHook : IDisposable
 
     private void CCMatchEndDetour(IntPtr p1, IntPtr p2, IntPtr p3, uint p4)
     {
+        // Keep the original flow going
+        ccMatchEndHook.Original(p1, p2, p3, p4);
+
         if (plugin.Configuration.Enabled)
         {
-            LeaveCC();
-        }
+            if (Plugin.ObjectTable.LocalPlayer.CurrentHp == 0)
+            {
+                // Run in loop mode
+                AttemptToLeaveCC();
+            }
+            else
+            {
+                LeaveCC();
+            }
 
-        ccMatchEndHook.Original(p1, p2, p3, p4);
+        }
+    }
+
+    /*  Edge case handling:
+     *  If player are in the KO'd state when the match end,
+     *  there is a chance an error will occur with the message: 'You were unable to leave the area.'.
+     *  This is a bruteforce approach - simple retry the whole process until the player left successfully.
+     */
+    private async void AttemptToLeaveCC()
+    {
+        while (Plugin.ClientState.IsPvPExcludingDen)
+        {
+            LeaveCC();
+            await SleepTaskAsync();
+        }
     }
 
     private unsafe void LeaveCC()
@@ -72,6 +96,12 @@ internal class CCMatchEndHook : IDisposable
         {
             Plugin.Chat.PrintError("Abandon duty window not found.");
         }
+    }
+
+    private async Task<bool> SleepTaskAsync()
+    {
+        await Task.Delay(500);
+        return true;
     }
 
     // Copied from SimpleTweaks Common

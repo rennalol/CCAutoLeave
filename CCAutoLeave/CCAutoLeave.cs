@@ -1,4 +1,5 @@
-﻿﻿using System.Linq;
+﻿﻿using System;
+using System.Linq;
 using Dalamud.Game.Command;
 using Dalamud.IoC;
 using Dalamud.Plugin;
@@ -7,7 +8,6 @@ using Dalamud.Plugin.Services;
 using Dalamud.Utility.Signatures;
 using CCAutoLeave.Windows;
 using CCAutoLeave.Hook;
-using System;
 
 namespace CCAutoLeave;
 
@@ -18,6 +18,8 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
     [PluginService] internal static ICommandManager CommandManager { get; private set; } = null!;
     [PluginService] internal static IPluginLog Log { get; private set; } = null!;
+    [PluginService] internal static IObjectTable ObjectTable { get; private set; } = null!;
+    [PluginService] internal static IClientState ClientState { get; private set; } = null!;
     [PluginService] internal static IGameInteropProvider InteropProvider { get; private set; } = null!;
     [PluginService] internal static IChatGui Chat { get; private set; } = null!;
     [PluginService] internal static IGameGui GameGui { get; private set; } = null!;
