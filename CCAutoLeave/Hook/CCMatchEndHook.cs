@@ -43,16 +43,7 @@ internal class CCMatchEndHook : IDisposable
 
         if (plugin.Configuration.Enabled)
         {
-            if (Plugin.ObjectTable.LocalPlayer.CurrentHp == 0)
-            {
-                // Run in loop mode
-                AttemptToLeaveCC();
-            }
-            else
-            {
-                LeaveCC();
-            }
-
+            AttemptToLeaveCC();
         }
     }
 
