@@ -3,6 +3,6 @@
 A Final Fantasy XIV Dalamud plugin to avoid trigger finger early leave.
 
 
-# Installation
+# Installation URL
 
-soon(tm)
+[https://raw.githubusercontent.com/rennalol/DalamudPluginRepo/main/pluginmaster.json](https://raw.githubusercontent.com/rennalol/DalamudPluginRepo/main/pluginmaster.json)
