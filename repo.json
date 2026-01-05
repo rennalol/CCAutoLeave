@@ -7,17 +7,17 @@
     "Tags": [
       "pvp",
       "plugin"
-	],
+	  ],
     "InternalName": "CCAutoLeave",
     "RepoUrl": "https://github.com/rennalol/CCAutoLeave",
     "DownloadCount": 0,
     "LastUpdate": 0,
-    "DownloadLinkInstall": "https://github.com/rennalol/CCAutoLeave/releases/download/0.0.0.3/latest.zip",
-    "DownloadLinkUpdate": "https://github.com/rennalol/CCAutoLeave/releases/download/0.0.0.3/latest.zip",
-    "AssemblyVersion": "0.0.0.3",
+    "DownloadLinkInstall": "https://github.com/rennalol/CCAutoLeave/releases/download/0.0.0.4/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/rennalol/CCAutoLeave/releases/download/0.0.0.4/latest.zip",
+    "AssemblyVersion": "0.0.0.4",
     "ApplicableVersion": "any",
     "DalamudApiLevel": "14",
-    "Changelog": "KO'd state edge case.",
+    "Changelog": "Updated KO'd state edge case detection.",
     "IconUrl": ""
   }
 ]
