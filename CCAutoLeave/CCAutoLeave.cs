@@ -6,26 +6,28 @@ using Dalamud.Plugin;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin.Services;
 using Dalamud.Utility.Signatures;
-using CCAutoLeave.Windows;
 using CCAutoLeave.Hook;
+using CCAutoLeave.Services;
+using CCAutoLeave.Windows;
 
 namespace CCAutoLeave;
 
 public sealed class Plugin : IDalamudPlugin
 {
     public string Name => "CCAutoLeave";
+    private const string CommandName = "/ccal";
 
     [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
     [PluginService] internal static ICommandManager CommandManager { get; private set; } = null!;
     [PluginService] internal static IPluginLog Log { get; private set; } = null!;
-    [PluginService] internal static IClientState ClientState { get; private set; } = null!;
     [PluginService] internal static IGameInteropProvider InteropProvider { get; private set; } = null!;
     [PluginService] internal static IChatGui Chat { get; private set; } = null!;
     [PluginService] internal static IGameGui GameGui { get; private set; } = null!;
+    [PluginService] internal static ICondition Condition { get; private set; } = null!;
 
     internal CCMatchEndHook? CCMatchEndHook { get; init; }
+    internal LeaveCCService LeaveCCService { get; init; }
 
-    private const string CommandName = "/ccal";
     public Configuration Configuration { get; init; }
     public readonly WindowSystem WindowSystem = new();
     private ConfigWindow ConfigWindow { get; init; }
@@ -57,6 +59,8 @@ public sealed class Plugin : IDalamudPlugin
         // Adds another button doing the same but for the main ui of the plugin
         PluginInterface.UiBuilder.OpenMainUi += ToggleMainUi;
 
+        LeaveCCService = new();
+
         try
         {
             CCMatchEndHook = new(this);
@@ -82,7 +86,8 @@ public sealed class Plugin : IDalamudPlugin
 
         CommandManager.RemoveHandler(CommandName);
 
-        CCMatchEndHook.Dispose();
+        CCMatchEndHook?.Dispose();
+        LeaveCCService.Dispose();
     }
 
     private void HandleCommand(string command, string args)
