@@ -165,10 +165,4 @@ internal class LeaveCCService : IDisposable
 
 		return atkValues;
 	}
-
-	public async void DebugLeaveCC()
-	{
-		bool result = Plugin.Condition.Any(ConditionFlag.Jumping);
-		Plugin.Chat.PrintError($"{result}");
-	}
 }
