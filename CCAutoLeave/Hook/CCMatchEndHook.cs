@@ -15,25 +15,25 @@ internal class CCMatchEndHook : IDisposable
     // p4 = ???
     private delegate void CCMatchEnd101Delegate(IntPtr p1, IntPtr p2, IntPtr p3, uint p4);
     [Signature("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 0F B6 42", DetourName = nameof(CCMatchEndDetour))]
-    private readonly Hook<CCMatchEnd101Delegate> ccMatchEndHook;
+    private Hook<CCMatchEnd101Delegate>? ccMatchEndHook;
 
     public CCMatchEndHook(Plugin plugin)
     {
         this.plugin = plugin;
         Plugin.InteropProvider.InitializeFromAttributes(this);
-        ccMatchEndHook.Enable();
+        ccMatchEndHook?.Enable();
     }
 
 
     public void Dispose()
     {
-        ccMatchEndHook.Dispose();
+        ccMatchEndHook?.Dispose();
     }
 
     private void CCMatchEndDetour(IntPtr p1, IntPtr p2, IntPtr p3, uint p4)
     {
         // Keep the original flow going
-        ccMatchEndHook.Original(p1, p2, p3, p4);
+        ccMatchEndHook!.Original(p1, p2, p3, p4);
 
         if (plugin.Configuration.Enabled)
         {

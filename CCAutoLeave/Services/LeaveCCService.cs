@@ -6,7 +6,7 @@ using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.NativeWrapper;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.ValueType;
+using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.AtkValueType;
 
 namespace CCAutoLeave.Services;
 
