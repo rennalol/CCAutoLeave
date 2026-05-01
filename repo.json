@@ -12,12 +12,12 @@
     "RepoUrl": "https://github.com/rennalol/CCAutoLeave",
     "DownloadCount": 0,
     "LastUpdate": 0,
-    "DownloadLinkInstall": "https://github.com/rennalol/CCAutoLeave/releases/download/0.0.0.4/latest.zip",
-    "DownloadLinkUpdate": "https://github.com/rennalol/CCAutoLeave/releases/download/0.0.0.4/latest.zip",
-    "AssemblyVersion": "0.0.0.4",
+    "DownloadLinkInstall": "https://github.com/rennalol/CCAutoLeave/releases/download/1.0.0.0/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/rennalol/CCAutoLeave/releases/download/1.0.0.0/latest.zip",
+    "AssemblyVersion": "1.0.0.0",
     "ApplicableVersion": "any",
-    "DalamudApiLevel": "14",
-    "Changelog": "Updated KO'd state edge case detection.",
+    "DalamudApiLevel": "15",
+    "Changelog": "Updated to Dalamud API v15",
     "IconUrl": ""
   }
 ]
