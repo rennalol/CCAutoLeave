@@ -12,12 +12,12 @@
     "RepoUrl": "https://github.com/rennalol/CCAutoLeave",
     "DownloadCount": 0,
     "LastUpdate": 0,
-    "DownloadLinkInstall": "https://github.com/rennalol/CCAutoLeave/releases/download/1.0.0.0/latest.zip",
-    "DownloadLinkUpdate": "https://github.com/rennalol/CCAutoLeave/releases/download/1.0.0.0/latest.zip",
-    "AssemblyVersion": "1.0.0.0",
+    "DownloadLinkInstall": "https://github.com/rennalol/CCAutoLeave/releases/download/1.0.0.1/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/rennalol/CCAutoLeave/releases/download/1.0.0.1/latest.zip",
+    "AssemblyVersion": "1.0.0.1",
     "ApplicableVersion": "any",
     "DalamudApiLevel": "15",
-    "Changelog": "Updated to Dalamud API v15",
+    "Changelog": "More reliable match leave method",
     "IconUrl": ""
   }
 ]
