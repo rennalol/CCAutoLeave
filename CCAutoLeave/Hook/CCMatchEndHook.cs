@@ -1,6 +1,7 @@
 ﻿using System;
 using Dalamud.Hooking;
 using Dalamud.Utility.Signatures;
+using FFXIVClientStructs.FFXIV.Client.Game.Event;
 
 namespace CCAutoLeave.Hook;
 
@@ -37,7 +38,8 @@ internal class CCMatchEndHook : IDisposable
 
         if (plugin.Configuration.Enabled)
         {
-            plugin.LeaveCCService.AttemptToLeaveCC();
+            EventFramework.LeaveCurrentContent(true);
+            //plugin.LeaveCCService.AttemptToLeaveCC();
         }
     }
 }
